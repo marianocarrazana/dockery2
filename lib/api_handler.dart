@@ -21,21 +21,22 @@ final sshProvider = StateNotifierProvider<SSHProxy, SSH>((ref) {
   return SSHProxy();
 });
 
-Future<dynamic> apiGet(String method, String url, Ref ref) async {
+Future<dynamic> apiGet(Ref ref, String method, String url,
+    {Map<String, dynamic>? queryParameters}) async {
+  final prefs = await SharedPreferences.getInstance();
   if (ref.read(sshProvider).client == null) {
     final newClient = SSHClient(
-      await SSHSocket.connect('localhost', 22),
-      username: '',
-      onPasswordRequest: () => '',
+      await SSHSocket.connect(prefs.getString("Host") ?? "", 22),
+      username: prefs.getString("Username") ?? "",
+      onPasswordRequest: () => prefs.getString("Password"),
     );
     ref.read(sshProvider.notifier).setClient(newClient);
   }
   SSHClient? client = ref.read(sshProvider).client;
   if (client == null) return null;
-  client.algorithms;
-  final output = await client.run(
-      'curl --unix-socket /var/run/docker.sock "http://localhost/v1.25/$url/json?all=1"',
-      stderr: false);
+  final uri = Uri.http('localhost', '/v1.25/$url/json', queryParameters);
+  final output = await client
+      .run('curl --unix-socket /var/run/docker.sock "$uri"', stderr: false);
   String decoded = utf8.decode(output);
   dynamic obj = jsonDecode(decoded);
   return obj;

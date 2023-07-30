@@ -10,7 +10,7 @@ import '../widgets/custom_container.dart';
 
 final containersProvider =
     FutureProvider.family<List, String>((ref, url) async {
-  int res = await apiGet("GET", url, ref);
+  int res = await apiGet(ref, "GET", url);
   return [];
 });
 

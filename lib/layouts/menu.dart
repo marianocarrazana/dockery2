@@ -9,6 +9,7 @@ class AppMenu extends ConsumerWidget {
   AppMenu({super.key, this.hue});
   final double? hue;
   final List _pageList = [
+    {'title': 'Sessions', 'route': '/sessions'},
     {'title': 'Containers', 'route': '/containers'},
     {'title': 'Images', 'route': '/images'},
   ];

@@ -1,17 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 
 import '../api_handler.dart';
 import '../widgets/responsive_grid.dart';
 import '../widgets/custom_container.dart';
+import '../extensions.dart';
 
 final containersProvider =
     FutureProvider.family<List, String>((ref, url) async {
-  dynamic res = await apiGet("GET", url, ref);
-  return [];
+  dynamic res = await apiGet(ref, "GET", url, queryParameters: {"all": "1"});
+  return res;
 });
 
 class Containers extends ConsumerWidget {
@@ -28,7 +26,27 @@ class Containers extends ConsumerWidget {
         error: (err, stack) => Text('Error: $err'),
         data: (config) {
           return ResponsiveGrid(children: [
-            for (var container in config) CustomContainer(child: Text("data"))
+            for (var container in config)
+              CustomContainer(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Text(container["Names"][0]),
+                    Text(
+                      container["Id"],
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                    Row(
+                      children: [
+                        Text(container["State"].toString().capitalize()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(container["Status"]),
+                        )
+                      ],
+                    )
+                  ]))
           ]);
         });
   }

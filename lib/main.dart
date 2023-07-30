@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'pages/sessions.dart';
 import 'pages/containers.dart';
 import 'pages/images.dart';
 import 'layouts/splitview.dart';
@@ -25,16 +26,17 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-        title: 'SAPP',
+        title: 'Dockery 2',
         theme: ThemeData(
-            useMaterial3: true, colorScheme: const ColorScheme.dark()),
+            useMaterial3: false, colorScheme: const ColorScheme.dark()),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case "/images":
               return _page(settings, const SplitView(content: Images()));
-
-            default: //containers
+            case "/containers":
               return _page(settings, const SplitView(content: Containers()));
+            default: //sessions
+              return _page(settings, const SplitView(content: Sessions()));
           }
         });
   }
