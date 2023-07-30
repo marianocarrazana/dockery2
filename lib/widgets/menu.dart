@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../widgets/custom_container.dart';
+import 'custom_container.dart';
 import '../states.dart';
 
 class AppMenu extends ConsumerWidget {

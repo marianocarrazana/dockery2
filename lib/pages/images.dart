@@ -8,10 +8,9 @@ import '../api_handler.dart';
 import '../widgets/responsive_grid.dart';
 import '../widgets/custom_container.dart';
 
-final containersProvider =
-    FutureProvider.family<List, String>((ref, url) async {
-  int res = await apiGet(ref, "GET", url);
-  return [];
+final imagesProvider = FutureProvider.family<List, String>((ref, url) async {
+  List res = await apiGet(ref, "GET", url);
+  return res;
 });
 
 class Images extends ConsumerWidget {
@@ -19,16 +18,28 @@ class Images extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<List> containers = ref.watch(containersProvider("containers"));
-    return containers.when(
+    AsyncValue<List> images = ref.watch(imagesProvider("images"));
+    return images.when(
         loading: () => const Center(
                 child: CircularProgressIndicator(
               color: Colors.white,
             )),
         error: (err, stack) => Text('Error: $err'),
-        data: (config) {
+        data: (_) {
           return ResponsiveGrid(children: [
-            for (var container in config) CustomContainer(child: Text("data"))
+            for (var image in _)
+              CustomContainer(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    image["Id"],
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                  ),
+                  Text(image["RepoTags"][0])
+                ],
+              ))
           ]);
         });
   }

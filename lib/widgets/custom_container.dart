@@ -5,12 +5,12 @@ class CustomContainer extends StatefulWidget {
   const CustomContainer({
     super.key,
     required this.child,
-    this.radius = 6.0,
+    this.radius = 4.0,
     this.margin = 8.0,
     this.padding = 8.0,
     this.opacity = 0.12,
     this.borderColor,
-    this.borderWidth = 1.0,
+    this.borderWidth = 1.5,
     this.cursor = MouseCursor.defer,
     this.hoverEffect = false,
     this.onTap,
@@ -44,10 +44,9 @@ class _SatoriContainer extends State<CustomContainer> {
 
   @override
   Widget build(BuildContext context) {
-    double saturation = 66;
-    double lightness = 20;
+    final theme = Theme.of(context);
     double hue = 0;
-    Color background = HSLuvColor.fromHSL(hue, saturation, lightness).toColor();
+    Color background = theme.colorScheme.background;
     Color backgroundHover =
         HSLuvColor.fromColor(background).withLightness(25).toColor();
     const BoxShadow shadow = BoxShadow(

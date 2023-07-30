@@ -28,7 +28,11 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
         title: 'Dockery 2',
         theme: ThemeData(
-            useMaterial3: false, colorScheme: const ColorScheme.dark()),
+            useMaterial3: false,
+            colorScheme: const ColorScheme.dark().copyWith(
+                background: Colors.black,
+                primary: const HSLColor.fromAHSL(1, 84, 1, .59).toColor(),
+                secondary: const HSLColor.fromAHSL(1, 84, 1, .59).toColor())),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case "/images":

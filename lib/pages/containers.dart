@@ -15,6 +15,44 @@ final containersProvider =
 class Containers extends ConsumerWidget {
   const Containers({super.key});
 
+  List<Widget> _getList(_, BuildContext context) {
+    final theme = Theme.of(context);
+    List<Widget> widgets = [];
+    for (var container in _) {
+      bool running = container["State"] == "running";
+      String state = container["State"];
+      var cont = CustomContainer(
+          borderColor: running ? theme.colorScheme.primary : null,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              container["Names"][0].toString().replaceAll("/", ""),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              container["Id"],
+              overflow: TextOverflow.fade,
+              softWrap: false,
+            ),
+            Row(
+              children: [
+                Text(
+                  state.capitalize(),
+                  style: TextStyle(
+                      color: running ? theme.colorScheme.primary : null),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(container["Status"]),
+                )
+              ],
+            )
+          ]));
+      widgets.add(cont);
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<List> containers = ref.watch(containersProvider("containers"));
@@ -24,30 +62,8 @@ class Containers extends ConsumerWidget {
               color: Colors.white,
             )),
         error: (err, stack) => Text('Error: $err'),
-        data: (config) {
-          return ResponsiveGrid(children: [
-            for (var container in config)
-              CustomContainer(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                    Text(container["Names"][0]),
-                    Text(
-                      container["Id"],
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                    Row(
-                      children: [
-                        Text(container["State"].toString().capitalize()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(container["Status"]),
-                        )
-                      ],
-                    )
-                  ]))
-          ]);
+        data: (_) {
+          return ResponsiveGrid(children: _getList(_, context));
         });
   }
 }
